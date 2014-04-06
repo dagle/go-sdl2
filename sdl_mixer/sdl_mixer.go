@@ -1,9 +1,12 @@
 package mix
 
+import "unsafe"
+
+//#cgo CFLAGS: -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -L/usr/lib -lSDL -lpthread
 //#cgo LDFLAGS: -lSDL2 -lSDL2_mixer
 //#include <SDL2/SDL_mixer.h>
+//#include "callback.h"
 import "C"
-import "unsafe"
 import "github.com/jackyb/go-sdl2/sdl"
 
 type Chunk struct {
@@ -381,4 +384,8 @@ func GetChunk(channel int) *Chunk {
 
 func CloseAudio() {
 	C.Mix_CloseAudio()
+}
+
+func HookMusicFinished(f func()){
+	C.HookMusicFinished(*(*unsafe.Pointer)(unsafe.Pointer(&f)))
 }
